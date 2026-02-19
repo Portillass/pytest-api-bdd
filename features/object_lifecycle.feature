@@ -5,7 +5,7 @@ Feature: Object Lifecycle Management
 
   # Positive Scenario (Happy Path)
   Scenario: Successfully create, retrieve, update and delete an object
-    Given I have a valid object payload
+    Given I have a valid object payload 
     When I send a POST request to create the object
     Then the response status code should be 200
     And the response should contain an object id
