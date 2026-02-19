@@ -1,55 +1,9 @@
-# utils/utils.py
-import datetime
-import os
-import webbrowser
-import json
 
-
-def append_result(results, test_name, status, message, payload=None, start_time=None, end_time=None):
-    """Add a test result dictionary to the list, including duration"""
-    if start_time is None:
-        start_time = datetime.datetime.now()
-    if end_time is None:
-        end_time = datetime.datetime.now()
-    duration = (end_time - start_time).total_seconds()
-
-    if isinstance(payload, (dict, list)):
-        payload = json.dumps(payload, indent=2)
-
-    results.append({
-        "test_name": test_name,
-        "status": status,
-        "message": message,
-        "payload": payload if payload is not None else "No Data",
-        "duration": f"{duration:.2f} s"
-    })
-
-
-def generate_html_report(results, filename=None):
-    """Generate HTML report with Test Name, Outcome, Duration, and Payload/Response with dark/light mode toggle"""
-    os.makedirs("reports", exist_ok=True)
-
-    if not filename:
-        # Auto-increment filenames like report.html, report1.html, report2.html
-        base = "reports/report"
-        i = 0
-        while True:
-            filename = f"{base}{'' if i==0 else i}.html"
-            if not os.path.exists(filename):
-                break
-            i += 1
-
-    report_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    total = len(results)
-    passed = len([r for r in results if r["status"].startswith("PASSED")])
-    failed = len([r for r in results if r["status"].startswith("FAILED")])
-
-    html_content = f"""
     <html>
     <head>
         <title>Pytest BDD Report</title>
         <style>
-            :root {{
+            :root {
                 --bg-color-light: #f0f2f5;
                 --text-color-light: #34495e;
                 --table-bg-light: #ffffff;
@@ -65,18 +19,18 @@ def generate_html_report(results, filename=None):
                 --table-header-text-dark: #ffffff;
                 --row-even-dark: #3a3a3a;
                 --row-hover-dark: #505050;
-            }}
+            }
 
-            body {{
+            body {
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 background-color: var(--bg-color-light);
                 color: var(--text-color-light);
                 margin: 30px;
-            }}
-            h1 {{
+            }
+            h1 {
                 text-align: center;
-            }}
-            .summary {{
+            }
+            .summary {
                 margin: 20px auto;
                 padding: 20px;
                 background-color: var(--table-bg-light);
@@ -84,31 +38,31 @@ def generate_html_report(results, filename=None):
                 box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                 max-width: 500px;
                 text-align: center;
-            }}
-            table {{
+            }
+            table {
                 border-collapse: collapse;
                 width: 100%;
                 table-layout: fixed;
                 background-color: var(--table-bg-light);
                 box-shadow: 0 4px 10px rgba(0,0,0,0.1);
                 margin-top: 20px;
-            }}
-            th, td {{
+            }
+            th, td {
                 border: 1px solid #ddd;
                 padding: 12px;
                 text-align: center;
                 word-wrap: break-word;
                 font-size: 14px;
-            }}
-            th {{
+            }
+            th {
                 background-color: var(--table-header-bg-light);
                 color: var(--table-header-text-light);
-            }}
-            tr:nth-child(even) {{ background-color: var(--row-even-light); }}
-            tr:hover {{ background-color: var(--row-hover-light); }}
-            .PASSED {{ color: green; font-weight: bold; }}
-            .FAILED {{ color: red; font-weight: bold; }}
-            pre {{
+            }
+            tr:nth-child(even) { background-color: var(--row-even-light); }
+            tr:hover { background-color: var(--row-hover-light); }
+            .PASSED { color: green; font-weight: bold; }
+            .FAILED { color: red; font-weight: bold; }
+            pre {
                 white-space: pre-wrap;
                 word-wrap: break-word;
                 max-height: 200px;
@@ -116,8 +70,8 @@ def generate_html_report(results, filename=None):
                 margin: 0;
                 font-size: 13px;
                 text-align: left;
-            }}
-            .mode-toggle {{
+            }
+            .mode-toggle {
                 position: fixed;
                 top: 10px;
                 right: 20px;
@@ -128,7 +82,7 @@ def generate_html_report(results, filename=None):
                 border: none;
                 border-radius: 5px;
                 font-size: 14px;
-            }}
+            }
         </style>
     </head>
     <body>
@@ -136,10 +90,10 @@ def generate_html_report(results, filename=None):
         <h1>Pytest BDD Automation Report</h1>
 
         <div class="summary">
-            <p><strong>Report Generated:</strong> {report_time}</p>
-            <p><strong>Total Tests:</strong> {total}</p>
-            <p><strong>Passed:</strong> <span style="color:green;">{passed}</span></p>
-            <p><strong>Failed:</strong> <span style="color:red;">{failed}</span></p>
+            <p><strong>Report Generated:</strong> 2026-02-19 14:11:13</p>
+            <p><strong>Total Tests:</strong> 3</p>
+            <p><strong>Passed:</strong> <span style="color:green;">3</span></p>
+            <p><strong>Failed:</strong> <span style="color:red;">0</span></p>
         </div>
 
         <table>
@@ -149,21 +103,45 @@ def generate_html_report(results, filename=None):
                 <th style="width:15%;">Duration</th>
                 <th style="width:40%;">Payload / Response</th>
             </tr>
-    """
-
-    # Table rows
-    for r in results:
-        payload_display = f"{r['message']}\n{r['payload']}"
-        html_content += f"""
+    
             <tr>
-                <td>{r['test_name']}</td>
-                <td class="{r['status']}">{r['status']}</td>
-                <td>{r['duration']}</td>
-                <td><pre>{payload_display}</pre></td>
+                <td>test_successfully_create_retrieve_update_and_delete_an_object</td>
+                <td class="PASSED">PASSED</td>
+                <td>0.00 s</td>
+                <td><pre>Test executed successfully. All assertions passed.
+{
+  "name": "Test Object",
+  "data": {
+    "year": 2024,
+    "price": 100
+  }
+}</pre></td>
             </tr>
-        """
-
-    html_content += """
+        
+            <tr>
+                <td>test_retrieve_nonexisting_object</td>
+                <td class="PASSED">PASSED</td>
+                <td>0.00 s</td>
+                <td><pre>Test executed successfully. All assertions passed.
+{
+  "object_id": "non-existing-idcls-12345"
+}</pre></td>
+            </tr>
+        
+            <tr>
+                <td>test_create_object_with_invalid_payload</td>
+                <td class="PASSED">PASSED</td>
+                <td>0.00 s</td>
+                <td><pre>Test executed successfully. All assertions passed.
+{
+  "name": "",
+  "data": {
+    "year": "invalid-year",
+    "price": -100
+  }
+}</pre></td>
+            </tr>
+        
         </table>
 
         <script>
@@ -200,10 +178,4 @@ def generate_html_report(results, filename=None):
         </script>
     </body>
     </html>
-    """
-
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(html_content)
-
-    print(f"Report generated: {filename}")
-    webbrowser.open(f"file://{os.path.abspath(filename)}")
+    

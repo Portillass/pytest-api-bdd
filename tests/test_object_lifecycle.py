@@ -27,8 +27,7 @@ def valid_payload(context, request):
         "name": "Test Object",
         "data": {"year": 2024, "price": 100}
     }
-    # Attach payload to pytest item for report
-    request.node.payload = context["payload"]
+    request.node.payload = context["payload"]  # Attach to report
 
 # When I send a POST request to create the object
 @when("I send a POST request to create the object")  # Action
@@ -106,8 +105,7 @@ def status_code_404(context):
 @given("I have a non-existing object id")
 def non_existing_id(context, request):
     context["object_id"] = "non-existing-idcls-12345"
-    request.node.payload = "N/A"  # No payload for this test
-
+    request.node.payload = {"object_id": context["object_id"]}  # Attach to report
 # I send a GET request using that id
 @when("I send a GET request using that id")
 def get_object_by_id(context):
@@ -128,15 +126,17 @@ def status_code_404_nonexisting(context):
 @given("I have an invalid object payload")
 def invalid_payload(context, request):
     context["payload"] = {
-        "data": {"year": 2024, "price": 100} 
+        "name": "",  # Name is required and cannot be empty
+        "data": {"year": "invalid-year", "price": -100}  # Invalid data types and values
     }
-    request.node.payload = context["payload"]
+    request.node.payload = context["payload"]  # Attach to report   
 
 # I send a POST request to create the object
 @when("I send a POST request to create the object with invalid payload")
 def create_object_invalid(context):
     response = context["api"].post(context["payload"])
     context["response"] = response
+    
 
 # The response status code should indicate a client error
 @then("the response status code should indicate a client error")
